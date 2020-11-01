@@ -7,15 +7,26 @@
     "build": "vue-cli-service build"
   },
   "dependencies": {
+    "@vue/composition-api": "^1.0.0-beta.18",
+    "axios": "^0.21.0",
+    "buefy": "^0.9.4",
+    "chart.js": "^2.9.4",
+    "dayjs": "^1.9.4",
     "vue": "^2.6.11",
+    "vue-chartjs": "^3.5.1",
     "vue-router": "^3.2.0",
     "vuex": "^3.4.0"
   },
   "devDependencies": {
+    "@types/chart.js": "^2.9.27",
     "@vue/cli-plugin-router": "~4.5.0",
     "@vue/cli-plugin-typescript": "~4.5.0",
     "@vue/cli-plugin-vuex": "~4.5.0",
     "@vue/cli-service": "~4.5.0",
+    "pug": "^3.0.0",
+    "pug-plain-loader": "^1.0.0",
+    "sass": "^1.28.0",
+    "sass-loader": "^10.0.4",
     "typescript": "~3.9.3",
     "vue-template-compiler": "^2.6.11"
   }

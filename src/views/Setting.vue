@@ -1,6 +1,6 @@
 <template lang="pug">
-div#home
-  span.is-size-1 home
+div#setting
+  span.is-size-1 setting
 </template>
 
 <script lang="ts">
@@ -14,5 +14,5 @@ div#home
 </script>
 
 <style lang="sass" scoped>
-  #home
+  #setting
 </style>

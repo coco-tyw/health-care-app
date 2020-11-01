@@ -1,0 +1,63 @@
+@import "variables"
+@import "animation"
+
+html
+  font-size: 14px
+  height: 100%
+
+body
+  font-size: 1rem
+  color: $text-color
+  height: 100%
+  margin: 0
+  padding: 0
+  font-family: $font
+  background-size: 100% auto
+  line-height: 1.25
+  -webkit-font-smoothing: antialiased
+  -moz-osx-font-smoothing: grayscale
+
+a
+  text-decoration: none
+
+.icon
+  color: currentColor
+
+.is-size-1
+  font-size: $size-1
+
+.flex
+  display: flex
+.flexbox
+  display: flex
+  align-items: center
+.flex,
+.flexbox
+  > :not(:last-child)
+    margin-right: .5em
+  &.has-centered
+    justify-content: center
+  &.has-space-evenly
+    justify-content: space-evenly
+    > *
+      flex: 1
+  &.has-space-between
+    justify-content: space-between
+    > :not(:last-child)
+      margin-right: 0
+  &.has-space-around
+    justify-content: space-around
+    > :not(:last-child)
+      margin-right: 0
+  &.has-baseline
+    align-items: baseline
+  &.has-flex-end
+    align-items: flex-end
+  .right
+    margin-left: auto
+  .center
+    margin-left: auto
+    margin-right: auto
+  .icon + span
+    margin-left: initial
+
