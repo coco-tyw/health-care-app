@@ -2,13 +2,13 @@
 nav#footer-nav.flexbox
   router-link.footer-nav-item(to="/" exact)
     b-icon(icon="home")
-    span Home
+    span ホーム
   router-link.footer-nav-item(to="/graphs" exact)
     b-icon(icon="chart-line")
-    span Graph
+    span データ
   router-link.footer-nav-item(to="/setting" exact)
     b-icon(icon="cog")
-    span Setting
+    span 設定
 </template>
 
 <script lang="ts">

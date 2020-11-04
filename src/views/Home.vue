@@ -1,6 +1,8 @@
 <template lang="pug">
 div#home
-  span.is-size-1 home
+  div.flex
+    div.bold health care app
+    div.right ID: 1
 </template>
 
 <script lang="ts">
