@@ -11,28 +11,54 @@ body
   height: 100%
   margin: 0
   padding: 0
-  font-family: $font
   background-size: 100% auto
   line-height: 1.25
   -webkit-font-smoothing: antialiased
   -moz-osx-font-smoothing: grayscale
 
+body, button, input, select, textarea
+  font-family: $font
+
+nav ul
+  list-style: none
+  li
+    list-style: none
 a
   text-decoration: none
+
+.bg-white
+  background-color: white
 
 .icon
   color: currentColor
 
 .bold
-  font-weight: bold
+  font-weight: bold !important
+
+.text-gray
+  color: $text-gray
+
+.bg-gray
+  background-color: $bg-grey
+
+.clickable
+  cursor: pointer
 
 .full-height
   height: 100%
 .full-width
   width: 100%
 
-.is-size-1
+.is-size1
   font-size: $size-1
+.is-size2
+  font-size: $size-2
+.is-size3
+  font-size: $size-3
+.is-size4
+  font-size: $size-4
+.is-size5
+  font-size: $size-5
 
 .text-centered
   text-align: center
@@ -72,3 +98,5 @@ a
   .icon + span
     margin-left: initial
 
+.box
+  color: inherit

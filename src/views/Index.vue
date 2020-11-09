@@ -1,7 +1,7 @@
 <template lang="pug">
 div#index
   transition(name="slide-fade" mode="out-in")
-    router-view.container
+    router-view.main-view
   footer-nav
 </template>
 
@@ -21,8 +21,9 @@ div#index
   #index
     position: fixed
     height: 100%
-    width: 100%
-    > .container
+    width: 100vw
+    padding: 0 0 $footer-nav-height
+    > .main-view
       height: 100%
       width: 100%
 </style>

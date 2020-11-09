@@ -1,14 +1,14 @@
 <template lang="pug">
-nav#footer-nav.flexbox
+nav#footer-nav.flexbox.bg-white
   router-link.footer-nav-item(to="/" exact)
     b-icon(icon="home")
-    span ホーム
-  router-link.footer-nav-item(to="/graphs" exact)
-    b-icon(icon="chart-line")
-    span データ
+    span.is-size4 ホーム
+  router-link.footer-nav-item(to="/devices")
+    b-icon(icon="microchip")
+    span.is-size4 ディバイス
   router-link.footer-nav-item(to="/setting" exact)
     b-icon(icon="cog")
-    span 設定
+    span.is-size4 設定
 </template>
 
 <script lang="ts">

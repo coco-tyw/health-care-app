@@ -1,23 +1,23 @@
 <template lang="pug">
-div#graphs
-  span.is-size-1 graphs
-    div(v-for="user in users" :key="user.id")
-      div {{ user }}
+div#devices-detail
+  span devices-detail
 </template>
 
 <script lang="ts">
   import {defineComponent, reactive, toRefs} from '@vue/composition-api'
-  import {UserModel} from '@/models'
-  import {User} from '@/types'
+  import {DeviceData} from '@/types'
+  import {DeviceDataModel} from '@/models'
 
   export default defineComponent({
     setup() {
       const data = reactive({
-        users: [] as User[]
+        deviceDatas: [] as DeviceData[]
       })
-      new UserModel().getList().then(res => {
-        data.users.push(...res.data)
+      new DeviceDataModel().getList().then(res => {
+        data.deviceDatas = res.data.deviceDatas
+        console.log(data.deviceDatas)
       })
+
       return {
         ...toRefs(data)
       }
@@ -26,5 +26,5 @@ div#graphs
 </script>
 
 <style lang="sass" scoped>
-  #graphs
+#devices-detail
 </style>
