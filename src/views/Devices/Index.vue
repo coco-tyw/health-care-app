@@ -16,8 +16,6 @@ div#devices-index.bg-gray
 
 <script lang="ts">
   import {defineComponent, reactive, toRefs} from '@vue/composition-api'
-  import {UserModel} from '@/models'
-  import {User} from '@/types'
   import DeviceAddModal from '@/components/modals/DeviceAddModal.vue'
   import {ModalProgrammatic as Modal} from 'buefy' 
 
@@ -31,12 +29,7 @@ div#devices-index.bg-gray
   export default defineComponent({
     setup(_, {root}) {
       const data = reactive({
-        users: [] as User[],
         devices: [] as Device[]
-      })
-
-      new UserModel().getList().then(res => {
-        data.users.push(...res.data)
       })
 
       data.devices.push(...[

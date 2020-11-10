@@ -1,10 +1,11 @@
 import BaseModel from './BaseModel'
+import {DeviceData, Gas, Humidity, Pressure, Temperature} from '@/types'
 
 export default class DeviceDataModel extends BaseModel {
   
   static _deserialize(json: any) {
     return Object.assign(json, {
-      // createdAt: super.toDate(json.createdAt)
+      createdAt: Number(json.createdAt.split('-').join(''))
     })
   }
 
@@ -14,7 +15,7 @@ export default class DeviceDataModel extends BaseModel {
 
   deserialize(json: any) {
     if('deviceDatas' in json) {
-      return {...json, deviceDatas: json.deviceDatas.map(DeviceDataModel._deserialize)}
+      return {...json, items: json.deviceDatas.map(DeviceDataModel._deserialize)}
     }
     return DeviceDataModel._deserialize(json)
   }
