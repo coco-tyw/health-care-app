@@ -19,7 +19,9 @@ div#home.bg-gray
         div.bold
           b-icon(icon="walking")
           span 歩数
-        WalkingChart(v-if="!isFetching" :chart-data="walkingGraph.chartData", :options="walkingGraph.options" :styles="{'display':'flex', 'justify-content':'center'}")
+        div.mt-1.flexbox
+          div 今週の目標 5,000歩
+          div.right: button.button.right.is-info.is-outlined.is-small 設定
         div.columns.is-mobile.mt-1
           div.column.is-6
             span.is-size4 今日 
@@ -27,10 +29,10 @@ div#home.bg-gray
             span.is-size4 歩
           div.column.is-6
             span.is-size4 今週 
-            span.bold 4343
+            span.bold 4,343
             span.is-size4 歩
-        div.flex
-          button.button.right.is-info.is-outlined.is-small 設定
+        WalkingChart.mt-1(v-if="!isFetching" :chart-data="walkingGraph.chartData", :options="walkingGraph.options" :styles="{'display':'flex', 'justify-content':'center'}")
+
 
     div.column.is-6
       div.box
