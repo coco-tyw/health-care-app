@@ -17,14 +17,9 @@ div#devices-index
 <script lang="ts">
   import {defineComponent, reactive, toRefs} from '@vue/composition-api'
   import DeviceAddModal from '@/components/modals/DeviceAddModal.vue'
-  import {ModalProgrammatic as Modal} from 'buefy' 
-
-  type Device = {
-    id: number,
-    online: boolean,
-    name: string,
-    batteryPercent: number | null
-  }
+  import {ModalProgrammatic as Modal} from 'buefy'
+  import {DeviceModel} from '@/models'
+  import {Device} from '@/types'
 
   export default defineComponent({
     setup(_, {root}) {
@@ -32,24 +27,9 @@ div#devices-index
         devices: [] as Device[]
       })
 
-      data.devices.push(...[
-        {
-          id: 1,
-          online: true,
-          name: 'Bit Mask ver.1',
-          batteryPercent: 100
-        }, {
-          id: 2,
-          online: false,
-          name: 'Apple watch',
-          batteryPercent: null
-        }, {
-          id: 3,
-          online: false,
-          name: 'iPhone X',
-          batteryPercent: null
-        }
-      ])
+      new DeviceModel().getList().then(res => {
+        data.devices.push(...res.data.items)
+      })
 
       const openDeviceAddModal = () => Modal.open({
         parent: root,

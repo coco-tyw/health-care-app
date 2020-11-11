@@ -1,5 +1,4 @@
 import BaseModel from './BaseModel'
-import {DeviceData, Gas, Humidity, Pressure, Temperature} from '@/types'
 
 export default class DeviceDataModel extends BaseModel {
   

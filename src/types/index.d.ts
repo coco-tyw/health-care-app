@@ -13,6 +13,14 @@ export type DeviceData = {
   gas: number
 }
 
+export type Device = {
+  id: number,
+  online: boolean,
+  name: string,
+  deviceName: string | null
+  batteryPercent: number | null
+}
+
 export type Gas = {
   id: number,
   value: number,

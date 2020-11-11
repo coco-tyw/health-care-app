@@ -21,8 +21,8 @@ div#devices-detail
 
 <script lang="ts">
   import {computed, defineComponent, reactive, toRefs} from '@vue/composition-api'
-  import {DeviceData, Gas, Humidity, Pressure, Temperature} from '@/types'
-  import {DeviceDataModel} from '@/models'
+  import {Device, DeviceData, Gas, Humidity, Pressure, Temperature} from '@/types'
+  import {DeviceDataModel, DeviceModel} from '@/models'
   import {getChartData, getChartLabels, getGasData, getHumidityData, getPressureData, getTemperatureData} from '@/modules/deviceDataModule'
 
   import Vue, {PropType} from 'vue'
@@ -47,16 +47,24 @@ div#devices-detail
 
   export default defineComponent({
     components: {LineChart},
-    setup() {
+    setup(_ , {root}) {
       const data = reactive({
+        device: {} as Device,
         deviceDatas: [] as DeviceData[],
         isFetching: true
       })
 
-      new DeviceDataModel().getList().then(res => {
-        data.deviceDatas = res.data.items
-        console.log(res.data.items)
-      }).finally(() => data.isFetching = false)
+      const init = async () => {
+        const deviceList = await new DeviceModel().getList()
+        data.device = deviceList.data.items.find((item: Device) => item.id === Number(root.$route.params.id))
+        if (!data.device.deviceName) {
+          data.isFetching = false
+          return
+        }
+        const deviceDataList = await new DeviceDataModel().getList({deviceName: data.device.deviceName})
+        data.deviceDatas = deviceDataList.data.items
+        data.isFetching = false
+      }
 
       const gasChartProps = computed(() => {
         const gasData = getGasData(data.deviceDatas)
@@ -125,6 +133,9 @@ div#devices-detail
           }
         }
       })
+
+      /** init **/
+      init()
 
       return {
         ...toRefs(data),

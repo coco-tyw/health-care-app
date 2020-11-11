@@ -25,7 +25,7 @@ div#device-add-modal.bg-white
 
     b-step-item(step="3" label="完了")
       div.text-centered 連携が完了しました
-      div.mt-3.flex.has-centered: button.button.is-success.is-outlined(@click="close") 終了
+      div.mt-1.flex.has-centered: button.button.is-success.is-outlined.bg-pure-white(@click="close") 終了
 
 </template>
 
