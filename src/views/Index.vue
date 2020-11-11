@@ -1,6 +1,6 @@
 <template lang="pug">
 div#index.bg-white
-  transition(name="slide-fade" mode="out-in")
+  div.main-view-wrapper: transition(name="slide-fade" mode="out-in")
     router-view.main-view
   footer-nav
 </template>
@@ -22,9 +22,10 @@ div#index.bg-white
     position: fixed
     height: 100%
     width: 100vw
-    padding: 0 0 $footer-nav-height
-    > .main-view
+    overflow-y: auto
+    .main-view
       height: 100%
       width: 100%
-      overflow-y: auto
+      &-wrapper
+        padding-bottom: $footer-nav-height
 </style>
