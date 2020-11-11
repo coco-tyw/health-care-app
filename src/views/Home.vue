@@ -48,8 +48,8 @@ div#home
   import {Bar} from 'vue-chartjs'
   import {computed, defineComponent, reactive, toRefs} from '@vue/composition-api'
   import {ChartData, ChartOptions} from 'chart.js'
-  import {DeviceDataModel} from '@/models'
-  import {DeviceData} from '@/types'
+  import {DeviceDataModel, DeviceModel} from '@/models'
+  import {Device, DeviceData} from '@/types'
 
   const PressureChart = Vue.extend({
     extends: Bar,
@@ -69,11 +69,18 @@ div#home
         deviceDatas: [] as DeviceData[],
         isFetching: true
       })
-      new DeviceDataModel().getList().then(res => {
-        data.deviceDatas = res.data.deviceDatas
-      }).finally(() => {
+
+      const init = async () => {
+        const deviceList = await new DeviceModel().getList()
+        const device = deviceList.data.items.find((item: Device) => item.id === 1)
+        if (!device.deviceName) {
+          data.isFetching = false
+          return
+        }
+        const deviceDataList = await new DeviceDataModel().getList({deviceName: device.deviceName})
+        data.deviceDatas = deviceDataList.data.items
         data.isFetching = false
-      })
+      }
 
       const pressureGraph = computed(() => {
         const _data = [] as number[]
@@ -93,6 +100,9 @@ div#home
           }
         }
       })
+
+      /** init **/
+      init()
 
       return {
         ...toRefs(data),
