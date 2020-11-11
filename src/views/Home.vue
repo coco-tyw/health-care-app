@@ -1,67 +1,58 @@
 <template lang="pug">
-div#home.bg-gray
-  div.columns.is-mobile
-    div.column.is-6
-      div.box
-        div.bold ストレスレベル
-        div.flex.mt-3: div.right.flexbox
-          div.is-size4.mr-2 先月比
-          div.bold.is-size1.is-negative
-            span 3%
-            span ↓
-        div.flex.mt-3: div.right.flexbox
-          div.is-size5.mr-2 昨日比
-          div.bold.is-positive
-            span 10%
-            span ↑
+div#home
+  div.notification.box
+    ul.is-size4
+      li アルコール濃度の上昇を検出しました
+      li こまめに水分補給しましょう
+      li 溜息が多いかも？
 
-      div.box
-        div.bold
-          b-icon(icon="walking")
-          span 歩数
-        div.mt-1.flexbox
-          div 今週の目標 5,000歩
-          div.right: button.button.right.is-info.is-outlined.is-small 設定
-        div.columns.is-mobile.mt-1
-          div.column.is-6
-            span.is-size4 今日 
-            span.bold 323
-            span.is-size4 歩
-          div.column.is-6
-            span.is-size4 今週 
-            span.bold 4,343
-            span.is-size4 歩
-        WalkingChart.mt-1(v-if="!isFetching" :chart-data="walkingGraph.chartData", :options="walkingGraph.options" :styles="{'display':'flex', 'justify-content':'center'}")
+  div.box
+    div.bold ストレスレベル
+    div.mt-2.flex: div.right
+      span.is-size4.pr-1 先月比
+      span.bold.is-size1.is-negative 3%↓
+      span.pr-2
+      span.is-size4.pr-1 昨日比
+      span.bold.is-size2.is-positive 10%↑
 
+  div.mt-3.box
+    div.bold
+      b-icon.is-size2(icon="walking")
+      span 歩数
+    div.mt-2.flex
+      div.mr-3
+        span.pr-1 今週の目標
+        span.is-size2 5,000歩
+      div.right
+        button.button.is-small.is-success.is-rounded.is-outlined.bg-white 設定
+    b-progress.mt-2(:max="5000")
+      b-progress-bar(slot="bar" :value="4343" show-value)
+      b-progress-bar(slot="bar" :value="523" type="is-primary" show-value) 今日
+    div.mt-2.flex: div.right
+      span.is-size4.pr-1 今日
+      span.bold.is-size2 523歩 
+      span.pr-2
+      span.is-size4.pr-1 達成率
+      span.bold.is-size2 97%
 
-    div.column.is-6
-      div.box
-        div.bold 大気圧
-        div.flex: div.bold.right 1020Pa
-        PressureChart(v-if="!isFetching" :chart-data="pressureGraph.chartData", :options="pressureGraph.options")
+  div.mt-3.box
+    div.bold 大気圧
+    div.flex: div.right
+      span.pr-1.is-size4 今日
+      span.bold.is-size2 1020Pa
+    PressureChart(v-if="!isFetching" :chart-data="pressureGraph.chartData", :options="pressureGraph.options" style="width: 80%")
 </template>
 
 <script lang="ts">
   import Vue, {PropType} from 'vue'
-  import {Doughnut, Line} from 'vue-chartjs'
+  import {Bar} from 'vue-chartjs'
   import {computed, defineComponent, reactive, toRefs} from '@vue/composition-api'
   import {ChartData, ChartOptions} from 'chart.js'
   import {DeviceDataModel} from '@/models'
   import {DeviceData} from '@/types'
 
   const PressureChart = Vue.extend({
-    extends: Line,
-    props: {
-      chartData: Object as PropType<ChartData>,
-      options: Object as PropType<ChartOptions>
-    },
-    mounted() {
-      (this as any).renderChart(this.chartData, this.options)
-    }
-  })
-
-  const WalkingChart = Vue.extend({
-    extends: Doughnut,
+    extends: Bar,
     props: {
       chartData: Object as PropType<ChartData>,
       options: Object as PropType<ChartOptions>
@@ -72,7 +63,7 @@ div#home.bg-gray
   })
 
   export default defineComponent({
-    components: {PressureChart, WalkingChart},
+    components: {PressureChart},
     setup() {
       const data = reactive({
         deviceDatas: [] as DeviceData[],
@@ -103,38 +94,25 @@ div#home.bg-gray
         }
       })
 
-      const walkingGraph = computed(() => {
-        const _data = [] as number[]
-        return {
-          chartData: {
-            labels: ['今日まで', '今日', '残り'],
-            datasets: [{
-              data: [75, 5, 20],
-              backgroundColor: ['#f87979', '#aa4c8f', '#38b48b']
-            }]
-          },
-          options: {
-            cutoutPercentage: 75,
-            legend: {
-              display: false
-            }
-          }
-        }
-      })
-
       return {
         ...toRefs(data),
-        pressureGraph, walkingGraph
+        pressureGraph
       }
     }
   })
 </script>
 
 <style lang="sass" scoped>
-  #home
-    padding: .75rem
-    .is-positive
-      color: $positive
-    .is-negative
-      color: $negative
+#home
+  .notification
+    border-radius: 8px
+    border: 2px solid $primary
+    background-color: white
+    li + li
+      margin-top: .5rem
+  padding: .75rem
+  .is-positive
+    color: $positive
+  .is-negative
+    color: $negative
 </style>

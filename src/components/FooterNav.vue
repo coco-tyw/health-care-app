@@ -1,14 +1,14 @@
 <template lang="pug">
-nav#footer-nav.flexbox.bg-white
+nav#footer-nav.flexbox
   router-link.footer-nav-item(to="/" exact)
     b-icon(icon="home")
-    span.is-size4 ホーム
+    span.is-size5 ホーム
   router-link.footer-nav-item(to="/devices")
     b-icon(icon="microchip")
-    span.is-size4 ディバイス
+    span.is-size5 ディバイス
   router-link.footer-nav-item(to="/setting" exact)
     b-icon(icon="cog")
-    span.is-size4 設定
+    span.is-size5 設定
 </template>
 
 <script lang="ts">
@@ -29,6 +29,10 @@ nav#footer-nav.flexbox.bg-white
     height: $footer-nav-height
     z-index: 9
     box-shadow: 0 -4px 8px rgba($black, .1)
+    border-radius: 32px 32px 0 0
+    padding: 0 2rem
+    background-color: white
+    overflow: hidden
     .footer-nav-item
       display: flex
       flex-direction: column

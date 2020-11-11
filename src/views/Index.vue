@@ -1,5 +1,5 @@
 <template lang="pug">
-div#index
+div#index.bg-white
   transition(name="slide-fade" mode="out-in")
     router-view.main-view
   footer-nav
@@ -26,4 +26,5 @@ div#index
     > .main-view
       height: 100%
       width: 100%
+      overflow-y: auto
 </style>

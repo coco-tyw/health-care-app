@@ -1,5 +1,5 @@
 <template lang="pug">
-div#devices-index.bg-gray
+div#devices-index
   div.flexbox
     div.right
       button.button.is-info.is-outlined(@click="openDeviceAddModal")
