@@ -1,22 +1,18 @@
 <template lang="pug">
-div#devices-detail
-  b-loading(:active="isFetching")
-  div.tile.box
-    div.bold Gas
-    LineChart.mt-1(:chart-data="gasChartProps.chartData" :chart-options="gasChartProps.chartOptions"
-              v-if="!isFetching")
-  div.tile.box
-    div.bold Humidity
-    LineChart.mt-1(:chart-data="humidityChartProps.chartData" :chart-options="humidityChartProps.chartOptions"
-              v-if="!isFetching")
-  div.tile.box
-    div.bold Pressure
-    LineChart.mt-1(:chart-data="pressureChartProps.chartData" :chart-options="pressureChartProps.chartOptions"
-              v-if="!isFetching")
-  div.tile.box
-    div.bold temperature
-    LineChart.mt-1(:chart-data="temperatureChartProps.chartData" :chart-options="temperatureChartProps.chartOptions"
-              v-if="!isFetching")
+div#devices-detail.bg-dark
+  b-tabs
+    b-tab-item(label="Gas")
+      LineChart.mt-1(:chart-data="gasChartProps.chartData" :chart-options="gasChartProps.chartOptions"
+                v-if="!isFetching")
+    b-tab-item(label="Humidity")
+      LineChart.mt-1(:chart-data="humidityChartProps.chartData" :chart-options="humidityChartProps.chartOptions"
+                v-if="!isFetching")
+    b-tab-item(label="Pressure")
+      LineChart.mt-1(:chart-data="pressureChartProps.chartData" :chart-options="pressureChartProps.chartOptions"
+                v-if="!isFetching")
+    b-tab-item(label="Temperature")
+      LineChart.mt-1(:chart-data="temperatureChartProps.chartData" :chart-options="temperatureChartProps.chartOptions"
+                v-if="!isFetching")
 </template>
 
 <script lang="ts">
@@ -32,6 +28,27 @@ div#devices-detail
   type ChartProps = {
     chartData: ChartData,
     chartptions: ChartOptions
+  } 
+
+  const defaultChartOptions = {
+    legend: {
+      display: false,
+      labels: {
+        fontColor: '#FFF'
+      }
+    },
+    scales: {
+      yAxes: [{
+        ticks: {
+          fontColor: 'white'
+        }
+      }],
+      xAxes: [{
+        ticks: {
+          fontColor: 'white'
+        }
+      }]
+    }
   }
 
   const LineChart = Vue.extend({
@@ -72,14 +89,11 @@ div#devices-detail
           chartData: {
             labels: getChartLabels(gasData),
             datasets: [{
-              data: getChartData(gasData)
+              data: getChartData(gasData),
+              backgroundColor: '#FFF'
             }]
           },
-          chartOptions: {
-            legend: {
-              display: false
-            }
-          }
+          chartOptions: defaultChartOptions
         }
       })
 
@@ -89,14 +103,11 @@ div#devices-detail
           chartData: {
             labels: getChartLabels(humidityData),
             datasets: [{
-              data: getChartData(humidityData)
+              data: getChartData(humidityData),
+              backgroundColor: '#FFF'
             }]
           },
-          chartOptions: {
-            legend: {
-              display: false
-            }
-          }
+          chartOptions: defaultChartOptions
         }
       })
 
@@ -106,14 +117,11 @@ div#devices-detail
           chartData: {
             labels: getChartLabels(pressureData),
             datasets: [{
-              data: getChartData(pressureData)
+              data: getChartData(pressureData),
+              backgroundColor: '#FFF'
             }]
           },
-          chartOptions: {
-            legend: {
-              display: false
-            }
-          }
+          chartOptions: defaultChartOptions
         }
       })
 
@@ -123,14 +131,11 @@ div#devices-detail
           chartData: {
             labels: getChartLabels(temperatureData),
             datasets: [{
-              data: getChartData(temperatureData)
+              data: getChartData(temperatureData),
+              backgroundColor: '#FFF'
             }]
           },
-          chartOptions: {
-            legend: {
-              display: false
-            }
-          }
+          chartOptions: defaultChartOptions
         }
       })
 
@@ -144,6 +149,21 @@ div#devices-detail
     }
   })
 </script>
+
+<style lang="sass">
+#devices-detail
+  .tabs
+    ul
+      border: none
+      li
+        a
+          border: none
+          color: $text-white !important
+        &.is-active
+          a
+            font-weight: $bold
+            font-size: 1.25rem
+</style>
 
 <style lang="sass" scoped>
 #devices-detail

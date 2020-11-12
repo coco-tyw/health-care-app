@@ -1,11 +1,11 @@
 <template lang="pug">
-div#devices-index
+div#devices-index.bg-light
   div.flexbox
     div.right
       button.button.is-info.is-outlined(@click="openDeviceAddModal")
         b-icon(icon="plus")
         span 連携
-  div.devices.mt-3
+  div.devices.mt-1
     div.device.box.clickable(v-for="device in devices" :key="device.id"
                              @click="onClick(device)"): div.flexbox
       div.device-active.mr-3(:class="{'is-active': device.online}")
@@ -51,6 +51,7 @@ div#devices-index
 <style lang="sass" scoped>
   #devices-index
     padding: .75rem
+    padding-bottom: calc( #{$footer-nav-height} + .75rem )
     .button
       &:not(:hover)
         background-color: white

@@ -1,5 +1,5 @@
 <template lang="pug">
-div#home
+div#home.bg-light
   div.notification.box
     ul.is-size4
       li アルコール濃度の上昇を検出しました
@@ -114,13 +114,14 @@ div#home
 
 <style lang="sass" scoped>
 #home
+  padding: .75rem
+  padding-bottom: calc( #{$footer-nav-height} + .75rem )
   .notification
     border-radius: 8px
     border: 2px solid $primary
     background-color: white
     li + li
       margin-top: .5rem
-  padding: .75rem
   .is-positive
     color: $positive
   .is-negative

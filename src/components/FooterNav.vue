@@ -1,5 +1,5 @@
 <template lang="pug">
-nav#footer-nav.flexbox
+nav#footer-nav.flexbox.bg-white
   router-link.footer-nav-item(to="/" exact)
     b-icon(icon="home")
     span.is-size5 ホーム

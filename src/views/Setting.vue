@@ -1,5 +1,5 @@
 <template lang="pug">
-div#setting
+div#setting.bg-light
   span.is-size-1 setting
 </template>
 
