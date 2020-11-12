@@ -22,6 +22,14 @@ export const getChartLabels = (items: Gas[] | Pressure[] | Temperature[] | Humid
   return labels
 }
 
+export const getDates = (items: DeviceData[]) => {
+  const date = [] as number[]
+  items.forEach(item => {
+    date.push(item.createdAt)
+  })
+  return date
+}
+
 export const getGasData = (items: DeviceData[]) => {
   const data = [] as Gas[]
   items.forEach(item => {

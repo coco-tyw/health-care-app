@@ -1,12 +1,13 @@
 {
   "items": [
-    {"id":1,"online":true,"name":"bitMask","deviceName":"exp-realtime","batteryPercent":100},
-    {"id":2,"online":false,"name":"bitMask (安静状態)","deviceName":"exp-normal","batteryPercent":null},
-    {"id":3,"online":false,"name":"bitMask (溜息)","deviceName":"exp-sigh","batteryPercent":null},
-    {"id":4,"online":false,"name":"bitMask (朗読)","deviceName":"exp-talking","batteryPercent":null},
-    {"id":5,"online":false,"name":"bitMask (飲酒後)","deviceName":"exp-alc","batteryPercent":null},
-    {"id":6,"online":false,"name":"bitMask (朝-軽い脱水状態)","deviceName":"exp-morning","batteryPercent":null},
-    {"id":7,"online":false,"name":"bitMask (ストレス下)","deviceName":"exp-realtime","batteryPercent":null},
-    {"id":8,"online":false,"name":"Apple watch","deviceName":null,"batteryPercent":null},
-    {"id":9,"online":false,"name":"iPhone X","deviceName":null,"batteryPercent":null}]
+    {"id":1,"online":true,"name":"bitMask","deviceName":"exp-realtime","batteryPercent":100,"situation":""},
+    {"id":2,"online":false,"name":"bitMask","deviceName":"exp-normal","batteryPercent":null,"situation":"安静状態"},
+    {"id":3,"online":false,"name":"bitMask","deviceName":"exp-sigh","batteryPercent":null,"situation":"溜息"},
+    {"id":4,"online":false,"name":"bitMask","deviceName":"exp-talking","batteryPercent":null,"situation":"朗読"},
+    {"id":5,"online":false,"name":"bitMask","deviceName":"exp-alc","batteryPercent":null,"situation":"飲酒後"},
+    {"id":6,"online":false,"name":"bitMask","deviceName":"exp-morning","batteryPercent":null,"situation":"軽い脱水状態"},
+    {"id":7,"online":false,"name":"bitMask","deviceName":"exp-realtime","batteryPercent":null,"situation":"ストレス下"},
+    {"id":8,"online":false,"name":"Apple watch","deviceName":null,"batteryPercent":null,"situation":""},
+    {"id":9,"online":false,"name":"iPhone X","deviceName":null,"batteryPercent":null,"situation":""}
+  ]
 }

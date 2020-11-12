@@ -24,8 +24,7 @@ div#device-add-modal.bg-light
         input.input(type="number")
 
     b-step-item(step="3" label="完了")
-      div.text-centered 連携が完了しました
-      div.mt-1.flex.has-centered: button.button.is-success.is-outlined.bg-white(@click="close") 終了
+      div.mt-1.flex.has-centered: button.button.is-success.is-outlined.is-rounded.bg-white(@click="close") 連携が完了しました
 
 </template>
 
@@ -74,8 +73,8 @@ div#device-add-modal.bg-light
     margin-top: .25rem
   .step-navigation
     display: flex
-    .pagination-next
-      margin-left: auto
+    .pagination-next, .pagination-previous
+      background-color: white
 </style>
 
 <style lang="sass" scoped>

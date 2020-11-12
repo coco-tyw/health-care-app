@@ -2,14 +2,16 @@
 div#devices-index.bg-light
   div.flexbox
     div.right
-      button.button.is-info.is-outlined(@click="openDeviceAddModal")
+      button.button.is-info.is-outlined.is-rounded(@click="openDeviceAddModal")
         b-icon(icon="plus")
         span 連携
   div.devices.mt-1
     div.device.box.clickable(v-for="device in devices" :key="device.id"
                              @click="onClick(device)"): div.flexbox
-      div.device-active.mr-3(:class="{'is-active': device.online}")
-      div {{ device.name }}
+      div.device-active.mr-2(:class="{'is-active': device.online}")
+      div 
+        span.pr-1 {{ device.name }}
+        span.mini-description {{ device.situation }}
       div.right(v-if="device.batteryPercent !== null")
         div: b-icon(icon="battery-full")
 </template>
@@ -57,6 +59,7 @@ div#devices-index.bg-light
         background-color: white
     .devices
       .device
+        padding: .75rem
         margin-bottom: 0
         border: 2px solid white
         &:hover

@@ -1,28 +1,35 @@
 <template lang="pug">
 div#home.bg-light
-  div.notification.box
-    ul.is-size4
-      li アルコール濃度の上昇を検出しました
-      li こまめに水分補給しましょう
-      li 溜息が多いかも？
+  div.notifications
+    b-notification(type="is-warning" has-icon)
+      span アルコール濃度の上昇を検出しました
+    b-notification
+      span こまめに水分補給しましょう
+    b-notification
+      span 溜息が多いかも？
 
-  div.box
+  div.box.mt-2
     div.bold ストレスレベル
     div.mt-2.flex: div.right
       span.is-size4.pr-1 先月比
-      span.bold.is-size1.is-negative 3%↓
+      span.bold.is-negative 
+        span.is-size1.is-negative 3
+        span.is-size2 %↓
       span.pr-2
       span.is-size4.pr-1 昨日比
-      span.bold.is-size2.is-positive 10%↑
+      span.bold.is-positive
+        span.is-size2 10
+        span %↑
 
-  div.mt-3.box
+  div.mt-2.box
     div.bold
       b-icon.is-size2(icon="walking")
       span 歩数
     div.mt-2.flex
       div.mr-3
         span.pr-1 今週の目標
-        span.is-size2 5,000歩
+        span.is-size2 5,000
+        span 歩
       div.right
         button.button.is-small.is-success.is-rounded.is-outlined.bg-white 設定
     b-progress.mt-2(:max="5000")
@@ -30,17 +37,19 @@ div#home.bg-light
       b-progress-bar(slot="bar" :value="523" type="is-primary" show-value) 今日
     div.mt-2.flex: div.right
       span.is-size4.pr-1 今日
-      span.bold.is-size2 523歩 
+      span.bold.is-size2 523
+      span.bold 歩 
       span.pr-2
       span.is-size4.pr-1 達成率
-      span.bold.is-size2 97%
+      span.bold.is-size2 97
+      span.bold %
 
-  div.mt-3.box
-    div.bold 大気圧
-    div.flex: div.right
-      span.pr-1.is-size4 今日
-      span.bold.is-size2 1020Pa
-    PressureChart(v-if="!isFetching" :chart-data="pressureGraph.chartData", :options="pressureGraph.options" style="width: 80%")
+  //- div.mt-3.box
+  //-   div.bold 大気圧
+  //-   div.flex: div.right
+  //-     span.pr-1.is-size4 今日
+  //-     span.bold.is-size2 1020
+  //-     span.bold hPa
 </template>
 
 <script lang="ts">
@@ -65,52 +74,19 @@ div#home.bg-light
   export default defineComponent({
     components: {PressureChart},
     setup() {
-      const data = reactive({
-        deviceDatas: [] as DeviceData[],
-        isFetching: true
-      })
-
-      const init = async () => {
-        const deviceList = await new DeviceModel().getList()
-        const device = deviceList.data.items.find((item: Device) => item.id === 1)
-        if (!device.deviceName) {
-          data.isFetching = false
-          return
-        }
-        const deviceDataList = await new DeviceDataModel().getList({deviceName: device.deviceName})
-        data.deviceDatas = deviceDataList.data.items
-        data.isFetching = false
-      }
-
-      const pressureGraph = computed(() => {
-        const _data = [] as number[]
-        data.deviceDatas.forEach(deviceData => {
-          _data.push(deviceData.pressure)
-        })
-        return {
-          chartData: {
-            datasets: [{
-              data: _data
-            }]
-          },
-          options: {
-            legend: {
-              display: false
-            }
-          }
-        }
-      })
-
-      /** init **/
-      init()
 
       return {
-        ...toRefs(data),
-        pressureGraph
       }
     }
   })
 </script>
+
+<style lang="sass">
+#home
+  .notification
+    .icon
+      font-size: $size-3
+</style>
 
 <style lang="sass" scoped>
 #home
@@ -120,8 +96,12 @@ div#home.bg-light
     border-radius: 8px
     border: 2px solid $primary
     background-color: white
-    li + li
-      margin-top: .5rem
+    margin-bottom: 0
+    padding: .75rem
+    & + .notification
+      margin-top: 0.5rem
+    &::last-child
+      margin-bottom: 2rem
   .is-positive
     color: $positive
   .is-negative

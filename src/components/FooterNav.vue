@@ -6,9 +6,9 @@ nav#footer-nav.flexbox.bg-white
   router-link.footer-nav-item(to="/devices")
     b-icon(icon="microchip")
     span.is-size5 ディバイス
-  router-link.footer-nav-item(to="/setting" exact)
-    b-icon(icon="cog")
-    span.is-size5 設定
+  //- router-link.footer-nav-item(to="/setting" exact)
+  //-   b-icon(icon="cog")
+  //-   span.is-size5 設定
 </template>
 
 <script lang="ts">

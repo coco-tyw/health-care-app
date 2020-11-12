@@ -18,6 +18,7 @@ export type Device = {
   online: boolean,
   name: string,
   deviceName: string | null
+  situation: string
   batteryPercent: number | null
 }
 

@@ -1,17 +1,21 @@
 <template lang="pug">
 div#devices-detail.bg-dark
-  b-tabs
-    b-tab-item(label="Gas")
-      LineChart.mt-1(:chart-data="gasChartProps.chartData" :chart-options="gasChartProps.chartOptions"
+  b-field(label="リアルタイム" horizontal)
+    b-checkbox(v-model="realtime" :disabled="!device.online")
+  b-field(label="日時" horizontal)
+    b-datetimepicker(:disabled="realtime")
+  b-tabs.mt-3
+    b-tab-item(label="匂い")
+      LineChart(:chart-data="gasChartProps.chartData" :chart-options="gasChartProps.chartOptions"
                 v-if="!isFetching")
-    b-tab-item(label="Humidity")
-      LineChart.mt-1(:chart-data="humidityChartProps.chartData" :chart-options="humidityChartProps.chartOptions"
+    b-tab-item(label="湿度")
+      LineChart(:chart-data="humidityChartProps.chartData" :chart-options="humidityChartProps.chartOptions"
                 v-if="!isFetching")
-    b-tab-item(label="Pressure")
-      LineChart.mt-1(:chart-data="pressureChartProps.chartData" :chart-options="pressureChartProps.chartOptions"
+    b-tab-item(label="圧力")
+      LineChart(:chart-data="pressureChartProps.chartData" :chart-options="pressureChartProps.chartOptions"
                 v-if="!isFetching")
-    b-tab-item(label="Temperature")
-      LineChart.mt-1(:chart-data="temperatureChartProps.chartData" :chart-options="temperatureChartProps.chartOptions"
+    b-tab-item(label="気温")
+      LineChart(:chart-data="temperatureChartProps.chartData" :chart-options="temperatureChartProps.chartOptions"
                 v-if="!isFetching")
 </template>
 
@@ -19,10 +23,10 @@ div#devices-detail.bg-dark
   import {computed, defineComponent, reactive, toRefs} from '@vue/composition-api'
   import {Device, DeviceData, Gas, Humidity, Pressure, Temperature} from '@/types'
   import {DeviceDataModel, DeviceModel} from '@/models'
-  import {getChartData, getChartLabels, getGasData, getHumidityData, getPressureData, getTemperatureData} from '@/modules/deviceDataModule'
+  import {getChartData, getChartLabels, getDates, getGasData, getHumidityData, getPressureData, getTemperatureData} from '@/modules/deviceDataModule'
 
   import Vue, {PropType} from 'vue'
-  import {Line} from 'vue-chartjs'
+  import {Line, mixins} from 'vue-chartjs'
   import {ChartData, ChartOptions} from 'chart.js'
 
   type ChartProps = {
@@ -53,6 +57,7 @@ div#devices-detail.bg-dark
 
   const LineChart = Vue.extend({
     extends: Line,
+    mixins: [mixins.reactiveProp],
     props: {
       chartData: Object as PropType<ChartData>,
       chartOptions: Object as PropType<ChartOptions>
@@ -68,10 +73,13 @@ div#devices-detail.bg-dark
       const data = reactive({
         device: {} as Device,
         deviceDatas: [] as DeviceData[],
-        isFetching: true
+        isFetching: false,
+        realtime: false,
+        chartRange: [0, 1]
       })
 
       const init = async () => {
+        data.isFetching = true
         const deviceList = await new DeviceModel().getList()
         data.device = deviceList.data.items.find((item: Device) => item.id === Number(root.$route.params.id))
         if (!data.device.deviceName) {
@@ -81,7 +89,26 @@ div#devices-detail.bg-dark
         const deviceDataList = await new DeviceDataModel().getList({deviceName: data.device.deviceName})
         data.deviceDatas = deviceDataList.data.items
         data.isFetching = false
+
+        const dates = getDates(data.deviceDatas)
+        console.log(dates[0], dates[dates.length-1])
       }
+
+      const moreFetch = async () => {
+        if (data.isFetching) return
+        data.isFetching = true
+        const deviceDataList = await new DeviceDataModel().getList({deviceName: data.device.deviceName})
+        data.deviceDatas.push(...deviceDataList.data.items)
+        data.isFetching = false
+      }
+
+      const chartDateRange = computed(() => {
+        const dates = getDates(data.deviceDatas)
+        if (dates.length <= 100) return // 一点
+        // 複数点
+        console.log(dates[0], dates[dates.length-1])
+        return dates
+      })
 
       const gasChartProps = computed(() => {
         const gasData = getGasData(data.deviceDatas)
@@ -152,9 +179,13 @@ div#devices-detail.bg-dark
 
 <style lang="sass">
 #devices-detail
+  .label
+    color: $text-white
   .tabs
+    margin-bottom: 0
     ul
       border: none
+      justify-content: center
       li
         a
           border: none
@@ -167,6 +198,7 @@ div#devices-detail.bg-dark
 
 <style lang="sass" scoped>
 #devices-detail
+  color: $text-white
   padding: .75rem
   overflow-y: scroll
 </style>
