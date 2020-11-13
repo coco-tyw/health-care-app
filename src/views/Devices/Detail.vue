@@ -1,12 +1,14 @@
 <template lang="pug">
 div#devices-detail.bg-dark
-  b-field(label="リアルタイム" horizontal)
-    b-checkbox(v-model="realtime" :disabled="!device.online")
+  b-field
+    b-radio(v-model="showType" native-value="latest") 最新
+    b-radio(v-model="showType" native-value="past") 過去
   b-field(label="日時" horizontal)
-    b-datetimepicker(v-model="datetime" :disabled="realtime" :timepicker="{enableSeconds: true}"
+    b-datetimepicker(v-model="datetime" :disabled="showType !== 'past'" :timepicker="{enableSeconds: true}"
                      locale="ja-JP" :mobile-native="false" :focusable="false"
                      :min-datetime="chartDateRange[0]" :max-datetime="chartDateRange[1]")
-  b-tabs.mt-3
+  div.mt-3.flex: button.button.is-rounded.right(@click="moreFetch") 更新
+  b-tabs
     b-tab-item(label="匂い")
       LineChart(:chart-data="gasChartProps.chartData" :chart-options="gasChartProps.chartOptions"
                 v-if="!isFetching")
@@ -22,7 +24,7 @@ div#devices-detail.bg-dark
 </template>
 
 <script lang="ts">
-  import {computed, defineComponent, reactive, toRefs, watch} from '@vue/composition-api'
+  import {computed, defineComponent, onMounted, reactive, toRefs, watch} from '@vue/composition-api'
   import {Device, DeviceData, Gas, Humidity, Pressure, Temperature} from '@/types'
   import {DeviceDataModel, DeviceModel} from '@/models'
   import {getChartData, getChartLabels, getGasData, getHumidityData, getPressureData, getTemperatureData} from '@/modules/deviceDataModule'
@@ -81,9 +83,8 @@ div#devices-detail.bg-dark
         device: {} as Device,
         deviceDatas: [] as DeviceData[],
         isFetching: false,
-        realtime: false,
-        realtimeInterval: NaN as number,
-        datetime: new Date() as Date
+        datetime: new Date() as Date,
+        showType: 'latest'
       })
 
       const init = async () => {
@@ -100,8 +101,8 @@ div#devices-detail.bg-dark
 
         const length = data.deviceDatas.length
         let index
-        if (length <= 10) index = 0
-        else index = length - 10
+        if (length <= 100) index = 0
+        else index = length - 100
         data.datetime = data.deviceDatas[index].createdAt
       }
 
@@ -115,36 +116,22 @@ div#devices-detail.bg-dark
         data.deviceDatas.push(...deviceDataList.data.items)
         data.isFetching = false
       }
-      watch(() => data.realtime, (val) => {
-        if (val === true) {
-          data.realtimeInterval = setInterval(() => {
-            moreFetch()
-          }, 1000)
-        } else {
-          clearInterval(data.realtimeInterval)
-          data.realtimeInterval = NaN
-        }
-      })
 
       const chartDateRange = computed(() => {
         if (data.isFetching) return [new Date(), new Date()]
-        if (data.deviceDatas.length <= 10) {
+        if (data.deviceDatas.length <= 100) {
           return [data.deviceDatas[0].createdAt, data.deviceDatas[0].createdAt]
         } else {
-          return [data.deviceDatas[0].createdAt, data.deviceDatas[data.deviceDatas.length-10].createdAt]
+          return [data.deviceDatas[0].createdAt, data.deviceDatas[data.deviceDatas.length-100].createdAt]
         }
       })
 
       const chartData = computed(() => {
-        if (data.realtime === true) return data.deviceDatas.slice(data.deviceDatas.length-10)
+        if (data.showType === 'latest') return data.deviceDatas.slice(data.deviceDatas.length-100)
         const index = data.deviceDatas.findIndex(deviceData => {
           return deviceData.createdAt.getTime() >= data.datetime.getTime()
         })
-        return data.deviceDatas.slice(index, index+10)
-      })
-
-      const chartProps = reactive({
-        gasChartProps: {} as ChartProps
+        return data.deviceDatas.slice(index, index+100)
       })
 
       const gasChartProps = computed(() => {
@@ -208,8 +195,10 @@ div#devices-detail.bg-dark
 
       return {
         ...toRefs(data),
-        gasChartProps, humidityChartProps, pressureChartProps, temperatureChartProps,
-        chartDateRange
+        gasChartProps, 
+        humidityChartProps, pressureChartProps, temperatureChartProps,
+        chartDateRange,
+        moreFetch
       }
     }
   })
@@ -217,6 +206,8 @@ div#devices-detail.bg-dark
 
 <style lang="sass">
 #devices-detail
+  .control-label
+    color: white
   .label
     color: $text-white
   .tabs
