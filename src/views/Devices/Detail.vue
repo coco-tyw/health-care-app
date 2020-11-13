@@ -4,7 +4,7 @@ div#devices-detail.bg-dark
     b-checkbox(v-model="realtime" :disabled="!device.online")
   b-field(label="日時" horizontal)
     b-datetimepicker(v-model="datetime" :disabled="realtime" :timepicker="{enableSeconds: true}"
-                     locale="ja-JP" :mobile-native="false"
+                     locale="ja-JP" :mobile-native="false" :focusable="false"
                      :min-datetime="chartDateRange[0]" :max-datetime="chartDateRange[1]")
   b-tabs.mt-3
     b-tab-item(label="匂い")
