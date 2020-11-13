@@ -231,5 +231,6 @@ div#devices-detail.bg-dark
 #devices-detail
   color: $text-white
   padding: .75rem
+  padding-bottom: calc( #{$footer-nav-height} + .75rem )
   overflow-y: scroll
 </style>
