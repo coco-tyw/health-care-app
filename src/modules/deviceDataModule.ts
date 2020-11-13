@@ -1,4 +1,4 @@
-import {Gas, Pressure, Temperature, Humidity, DeviceData} from '@/types';
+import {Gas, Pressure, Temperature, Humidity, DeviceData, Datetime} from '@/types';
 
 export const getChartData = (items: Gas[] | Pressure[] | Temperature[] | Humidity[]) => {
   const data = [] as number[]
@@ -11,23 +11,12 @@ export const getChartData = (items: Gas[] | Pressure[] | Temperature[] | Humidit
 export const getChartLabels = (items: Gas[] | Pressure[] | Temperature[] | Humidity[]) => {
   const labels = [] as string[]
   items.forEach(item => {
-    const s = item.createdAt % 100
-    const m = (item.createdAt - s) / 100 % 100
-    const h = (item.createdAt - m*100 - s) / 10000 % 100
-    const D = (item.createdAt - h*10000 - m*100 - s) / 1000000 % 100
-    const M = (item.createdAt - D*1000000 - h*10000 - m*100 - s) / 100000000 % 100
-    const Y = (item.createdAt - M*100000000 - D*1000000 - h*10000 - m*100 - s) / 10000000000 % 10000
+    const h = item.createdAt.getHours()
+    const m = item.createdAt.getMinutes()
+    const s = item.createdAt.getSeconds()
     labels.push(`${h}:${m}:${s}`)
   })
   return labels
-}
-
-export const getDates = (items: DeviceData[]) => {
-  const date = [] as number[]
-  items.forEach(item => {
-    date.push(item.createdAt)
-  })
-  return date
 }
 
 export const getGasData = (items: DeviceData[]) => {

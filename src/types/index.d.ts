@@ -5,7 +5,7 @@ export type User = {
 
 export type DeviceData = {
   id: number,
-  createdAt: number,
+  createdAt: Date,
   deviceName: string,
   temperature: number,
   humidity: number,
@@ -25,23 +25,32 @@ export type Device = {
 export type Gas = {
   id: number,
   value: number,
-  createdAt: number
+  createdAt: Date
 }
 
 export type Temperature = {
   id: number,
   value: number,
-  createdAt: number
+  createdAt: Date
 }
 
 export type Humidity = {
   id: number,
   value: number,
-  createdAt: number
+  createdAt: Date
 }
 
 export type Pressure = {
   id: number,
   value: number,
-  createdAt: number
+  createdAt: Date
+}
+
+export type Datetime = {
+  Y: number
+  M: number
+  D: number
+  h: number
+  m: number
+  s: number
 }

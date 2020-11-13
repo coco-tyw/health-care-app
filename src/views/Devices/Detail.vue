@@ -3,7 +3,7 @@ div#devices-detail.bg-dark
   b-field(label="リアルタイム" horizontal)
     b-checkbox(v-model="realtime" :disabled="!device.online")
   b-field(label="日時" horizontal)
-    b-datetimepicker(:disabled="realtime")
+    b-datetimepicker(v-model="datetime" :disabled="realtime" :timepicker="{enableSeconds: true}" locale="ja-JP")
   b-tabs.mt-3
     b-tab-item(label="匂い")
       LineChart(:chart-data="gasChartProps.chartData" :chart-options="gasChartProps.chartOptions"
@@ -23,7 +23,7 @@ div#devices-detail.bg-dark
   import {computed, defineComponent, reactive, toRefs} from '@vue/composition-api'
   import {Device, DeviceData, Gas, Humidity, Pressure, Temperature} from '@/types'
   import {DeviceDataModel, DeviceModel} from '@/models'
-  import {getChartData, getChartLabels, getDates, getGasData, getHumidityData, getPressureData, getTemperatureData} from '@/modules/deviceDataModule'
+  import {getChartData, getChartLabels, getGasData, getHumidityData, getPressureData, getTemperatureData} from '@/modules/deviceDataModule'
 
   import Vue, {PropType} from 'vue'
   import {Line, mixins} from 'vue-chartjs'
@@ -41,6 +41,9 @@ div#devices-detail.bg-dark
         fontColor: '#FFF'
       }
     },
+    tooltips: {
+      enabled: false
+    },
     scales: {
       yAxes: [{
         ticks: {
@@ -49,7 +52,9 @@ div#devices-detail.bg-dark
       }],
       xAxes: [{
         ticks: {
-          fontColor: 'white'
+          fontColor: 'white',
+          maxTicksLimit: 1,
+          maxRotation: 0
         }
       }]
     }
@@ -75,6 +80,7 @@ div#devices-detail.bg-dark
         deviceDatas: [] as DeviceData[],
         isFetching: false,
         realtime: false,
+        datetime: new Date() as Date,
         chartRange: [0, 1]
       })
 
@@ -90,8 +96,11 @@ div#devices-detail.bg-dark
         data.deviceDatas = deviceDataList.data.items
         data.isFetching = false
 
-        const dates = getDates(data.deviceDatas)
-        console.log(dates[0], dates[dates.length-1])
+        const length = data.deviceDatas.length
+        let index
+        if (length <= 100) index = 0
+        else index = length - 100
+        data.datetime = data.deviceDatas[index].createdAt
       }
 
       const moreFetch = async () => {
@@ -103,15 +112,24 @@ div#devices-detail.bg-dark
       }
 
       const chartDateRange = computed(() => {
-        const dates = getDates(data.deviceDatas)
-        if (dates.length <= 100) return // 一点
-        // 複数点
-        console.log(dates[0], dates[dates.length-1])
-        return dates
+        // const dates = getDatetimes(data.deviceDatas)
+        // if (dates.length <= 100) return // 一点
+        // // 複数点
+        // console.log(dates[0], dates[dates.length-1])
+        // return dates
+      })
+
+      const chartData = computed(() => {
+        console.log(data.datetime)
+        if (data.realtime === true) return data.deviceDatas.slice(data.deviceDatas.length-100)
+        const index = data.deviceDatas.findIndex(deviceData => {
+          return deviceData.createdAt.getTime() >= data.datetime.getTime()
+        })
+        return data.deviceDatas.slice(index, index+100)
       })
 
       const gasChartProps = computed(() => {
-        const gasData = getGasData(data.deviceDatas)
+        const gasData = getGasData(chartData.value)
         return {
           chartData: {
             labels: getChartLabels(gasData),
@@ -125,7 +143,7 @@ div#devices-detail.bg-dark
       })
 
       const humidityChartProps = computed(() => {
-        const humidityData = getHumidityData(data.deviceDatas)
+        const humidityData = getHumidityData(chartData.value)
         return {
           chartData: {
             labels: getChartLabels(humidityData),
@@ -139,7 +157,7 @@ div#devices-detail.bg-dark
       })
 
       const pressureChartProps = computed(() => {
-        const pressureData = getPressureData(data.deviceDatas)
+        const pressureData = getPressureData(chartData.value)
         return {
           chartData: {
             labels: getChartLabels(pressureData),
@@ -153,7 +171,7 @@ div#devices-detail.bg-dark
       })
 
       const temperatureChartProps = computed(() => {
-        const temperatureData = getTemperatureData(data.deviceDatas)
+        const temperatureData = getTemperatureData(chartData.value)
         return {
           chartData: {
             labels: getChartLabels(temperatureData),
