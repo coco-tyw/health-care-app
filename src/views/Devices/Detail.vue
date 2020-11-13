@@ -3,7 +3,9 @@ div#devices-detail.bg-dark
   b-field(label="リアルタイム" horizontal)
     b-checkbox(v-model="realtime" :disabled="!device.online")
   b-field(label="日時" horizontal)
-    b-datetimepicker(v-model="datetime" :disabled="realtime" :timepicker="{enableSeconds: true}" locale="ja-JP")
+    b-datetimepicker(v-model="datetime" :disabled="realtime" :timepicker="{enableSeconds: true}"
+                     locale="ja-JP" :mobile-native="false"
+                     :min-datetime="chartDateRange[0]" :max-datetime="chartDateRange[1]")
   b-tabs.mt-3
     b-tab-item(label="匂い")
       LineChart(:chart-data="gasChartProps.chartData" :chart-options="gasChartProps.chartOptions"
@@ -80,8 +82,7 @@ div#devices-detail.bg-dark
         deviceDatas: [] as DeviceData[],
         isFetching: false,
         realtime: false,
-        datetime: new Date() as Date,
-        chartRange: [0, 1]
+        datetime: new Date() as Date
       })
 
       const init = async () => {
@@ -112,15 +113,15 @@ div#devices-detail.bg-dark
       }
 
       const chartDateRange = computed(() => {
-        // const dates = getDatetimes(data.deviceDatas)
-        // if (dates.length <= 100) return // 一点
-        // // 複数点
-        // console.log(dates[0], dates[dates.length-1])
-        // return dates
+        if (data.isFetching) return [new Date(), new Date()]
+        if (data.deviceDatas.length <= 100) {
+          return [data.deviceDatas[0].createdAt, data.deviceDatas[0].createdAt]
+        } else {
+          return [data.deviceDatas[0].createdAt, data.deviceDatas[data.deviceDatas.length-100].createdAt]
+        }
       })
 
       const chartData = computed(() => {
-        console.log(data.datetime)
         if (data.realtime === true) return data.deviceDatas.slice(data.deviceDatas.length-100)
         const index = data.deviceDatas.findIndex(deviceData => {
           return deviceData.createdAt.getTime() >= data.datetime.getTime()
@@ -189,7 +190,8 @@ div#devices-detail.bg-dark
 
       return {
         ...toRefs(data),
-        gasChartProps, humidityChartProps, pressureChartProps, temperatureChartProps
+        gasChartProps, humidityChartProps, pressureChartProps, temperatureChartProps,
+        chartDateRange
       }
     }
   })
