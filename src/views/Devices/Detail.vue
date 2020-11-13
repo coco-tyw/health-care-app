@@ -1,7 +1,7 @@
 <template lang="pug">
 div#devices-detail.bg-dark
   b-field
-    b-radio(v-model="showType" native-value="latest") 最新
+    b-radio(v-model="showType" native-value="latest" :disabled="!device.online") 最新
     b-radio(v-model="showType" native-value="past") 過去
   b-field(label="日時" horizontal)
     b-datetimepicker(v-model="datetime" :disabled="showType !== 'past'" :timepicker="{enableSeconds: true}"
@@ -98,6 +98,8 @@ div#devices-detail.bg-dark
         const deviceDataList = await new DeviceDataModel().getList({deviceName: data.device.deviceName})
         data.deviceDatas = deviceDataList.data.items
         data.isFetching = false
+
+        if (!data.device.online) data.showType = 'past'
 
         const length = data.deviceDatas.length
         let index
