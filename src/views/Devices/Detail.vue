@@ -22,7 +22,7 @@ div#devices-detail.bg-dark
 </template>
 
 <script lang="ts">
-  import {computed, defineComponent, reactive, toRefs} from '@vue/composition-api'
+  import {computed, defineComponent, reactive, toRefs, watch} from '@vue/composition-api'
   import {Device, DeviceData, Gas, Humidity, Pressure, Temperature} from '@/types'
   import {DeviceDataModel, DeviceModel} from '@/models'
   import {getChartData, getChartLabels, getGasData, getHumidityData, getPressureData, getTemperatureData} from '@/modules/deviceDataModule'
@@ -82,6 +82,7 @@ div#devices-detail.bg-dark
         deviceDatas: [] as DeviceData[],
         isFetching: false,
         realtime: false,
+        realtimeInterval: NaN as number,
         datetime: new Date() as Date
       })
 
@@ -99,34 +100,51 @@ div#devices-detail.bg-dark
 
         const length = data.deviceDatas.length
         let index
-        if (length <= 100) index = 0
-        else index = length - 100
+        if (length <= 10) index = 0
+        else index = length - 10
         data.datetime = data.deviceDatas[index].createdAt
       }
 
       const moreFetch = async () => {
         if (data.isFetching) return
+        if (data.deviceDatas.length === 0) return
         data.isFetching = true
-        const deviceDataList = await new DeviceDataModel().getList({deviceName: data.device.deviceName})
+        const createdAt = data.deviceDatas[data.deviceDatas.length-1].createdAt
+        const from = `${createdAt.getFullYear()}-${createdAt.getMonth()+1}-${createdAt.getDate()}-${createdAt.getHours()}-${createdAt.getMinutes()}-${createdAt.getSeconds()+1}`
+        const deviceDataList = await new DeviceDataModel().getList({deviceName: data.device.deviceName, from})
         data.deviceDatas.push(...deviceDataList.data.items)
         data.isFetching = false
       }
+      watch(() => data.realtime, (val) => {
+        if (val === true) {
+          data.realtimeInterval = setInterval(() => {
+            moreFetch()
+          }, 1000)
+        } else {
+          clearInterval(data.realtimeInterval)
+          data.realtimeInterval = NaN
+        }
+      })
 
       const chartDateRange = computed(() => {
         if (data.isFetching) return [new Date(), new Date()]
-        if (data.deviceDatas.length <= 100) {
+        if (data.deviceDatas.length <= 10) {
           return [data.deviceDatas[0].createdAt, data.deviceDatas[0].createdAt]
         } else {
-          return [data.deviceDatas[0].createdAt, data.deviceDatas[data.deviceDatas.length-100].createdAt]
+          return [data.deviceDatas[0].createdAt, data.deviceDatas[data.deviceDatas.length-10].createdAt]
         }
       })
 
       const chartData = computed(() => {
-        if (data.realtime === true) return data.deviceDatas.slice(data.deviceDatas.length-100)
+        if (data.realtime === true) return data.deviceDatas.slice(data.deviceDatas.length-10)
         const index = data.deviceDatas.findIndex(deviceData => {
           return deviceData.createdAt.getTime() >= data.datetime.getTime()
         })
-        return data.deviceDatas.slice(index, index+100)
+        return data.deviceDatas.slice(index, index+10)
+      })
+
+      const chartProps = reactive({
+        gasChartProps: {} as ChartProps
       })
 
       const gasChartProps = computed(() => {

@@ -14,7 +14,7 @@ export const getChartLabels = (items: Gas[] | Pressure[] | Temperature[] | Humid
     const h = item.createdAt.getHours()
     const m = item.createdAt.getMinutes()
     const s = item.createdAt.getSeconds()
-    labels.push(`${h}:${m}:${s}`)
+    labels.push(`${h}時${m}分${s}秒`)
   })
   return labels
 }

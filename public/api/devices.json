@@ -7,6 +7,7 @@
     {"id":5,"online":false,"name":"bitMask","deviceName":"exp-alc","batteryPercent":null,"situation":"飲酒後"},
     {"id":6,"online":false,"name":"bitMask","deviceName":"exp-morning","batteryPercent":null,"situation":"軽い脱水状態"},
     {"id":7,"online":false,"name":"Apple watch","deviceName":null,"batteryPercent":null,"situation":""},
-    {"id":8,"online":false,"name":"iPhone X","deviceName":null,"batteryPercent":null,"situation":""}
+    {"id":8,"online":false,"name":"iPhone X","deviceName":null,"batteryPercent":null,"situation":""},
+    {"id":9,"online":true,"name":"bitMask","deviceName":"exp-realtime-test","batteryPercent":100,"situation":"リアルタイムテスト"}
   ]
 }
