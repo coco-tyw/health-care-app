@@ -1,5 +1,5 @@
 <template lang="pug">
-div#home.bg-light
+div.bg-light: div#home
   div.notifications
     b-notification(type="is-warning" has-icon)
       span アルコール濃度の上昇を検出しました

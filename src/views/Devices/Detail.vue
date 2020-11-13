@@ -1,6 +1,17 @@
 <template lang="pug">
-div#devices-detail.bg-dark
-  b-field
+div.bg-dark: div#devices-detail
+  nav.header-nav-content(:style="{minHeight: `${headerNavHeight}px`}")
+    div.has-space-between.flexbox
+      b-icon(icon="chevron-left" @click.native="goBack()")
+      div.flexbox
+        div.device-active.mr-2(:class="{'is-active': device.online}")
+        h6
+          span.bold {{ device.name }}
+          span.is-size5(v-if="device.situation")  - 
+          span.is-size5 {{ device.situation }}
+      b-icon
+
+  b-field.mt-1
     b-radio(v-model="showType" native-value="latest" :disabled="!device.online") 最新
     b-radio(v-model="showType" native-value="past") 過去
   b-field(label="日時" horizontal)
@@ -24,7 +35,7 @@ div#devices-detail.bg-dark
 </template>
 
 <script lang="ts">
-  import {computed, defineComponent, onMounted, reactive, toRefs, watch} from '@vue/composition-api'
+  import {computed, defineComponent, onBeforeMount, onBeforeUnmount, onMounted, reactive, toRefs, watch} from '@vue/composition-api'
   import {Device, DeviceData, Gas, Humidity, Pressure, Temperature} from '@/types'
   import {DeviceDataModel, DeviceModel} from '@/models'
   import {getChartData, getChartLabels, getGasData, getHumidityData, getPressureData, getTemperatureData} from '@/modules/deviceDataModule'
@@ -87,6 +98,10 @@ div#devices-detail.bg-dark
         showType: 'latest'
       })
 
+      const goBack = () => {
+        root.$router.back()
+      }
+
       const init = async () => {
         data.isFetching = true
         const deviceList = await new DeviceModel().getList()
@@ -103,8 +118,8 @@ div#devices-detail.bg-dark
 
         const length = data.deviceDatas.length
         let index
-        if (length <= 100) index = 0
-        else index = length - 100
+        if (length <= 1000) index = 0
+        else index = length - 1000
         data.datetime = data.deviceDatas[index].createdAt
       }
 
@@ -121,20 +136,28 @@ div#devices-detail.bg-dark
 
       const chartDateRange = computed(() => {
         if (data.isFetching) return [new Date(), new Date()]
-        if (data.deviceDatas.length <= 100) {
+        if (data.deviceDatas.length <= 1000) {
           return [data.deviceDatas[0].createdAt, data.deviceDatas[0].createdAt]
         } else {
-          return [data.deviceDatas[0].createdAt, data.deviceDatas[data.deviceDatas.length-100].createdAt]
+          return [data.deviceDatas[0].createdAt, data.deviceDatas[data.deviceDatas.length-1000].createdAt]
         }
       })
 
       const chartData = computed(() => {
-        if (data.showType === 'latest') return data.deviceDatas.slice(data.deviceDatas.length-100)
+        if (data.showType === 'latest') return data.deviceDatas.slice(data.deviceDatas.length-1000)
         const index = data.deviceDatas.findIndex(deviceData => {
           return deviceData.createdAt.getTime() >= data.datetime.getTime()
         })
-        return data.deviceDatas.slice(index, index+100)
+        return data.deviceDatas.slice(index, index+1000)
       })
+
+      onBeforeMount(() => {
+        root.$store.commit('setHeaderNavHeight', 36)
+      })
+      onBeforeUnmount(() => {
+        root.$store.commit('setHeaderNavHeight', 0)
+      })
+
 
       const gasChartProps = computed(() => {
         const gasData = getGasData(chartData.value)
@@ -196,11 +219,12 @@ div#devices-detail.bg-dark
       init()
 
       return {
-        ...toRefs(data),
+        ...toRefs(data), root,
         gasChartProps, 
         humidityChartProps, pressureChartProps, temperatureChartProps,
         chartDateRange,
-        moreFetch
+        moreFetch,
+        goBack
       }
     }
   })
@@ -233,4 +257,13 @@ div#devices-detail.bg-dark
   padding: .75rem
   padding-bottom: calc( #{$footer-nav-height} + .75rem )
   overflow-y: scroll
+  .header-nav-content
+    background-color: rgb(38, 45, 56)
+  .device-active
+    width: .5rem
+    height: .5rem
+    background-color: gainsboro
+    border-radius: .25rem
+    &.is-active
+      background-color: rgb(59, 175, 117)
 </style>

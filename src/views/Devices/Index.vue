@@ -1,5 +1,5 @@
 <template lang="pug">
-div#devices-index.bg-light
+div.bg-light: div#devices-index
   div.flexbox
     div.right
       button.button.is-info.is-outlined.is-rounded(@click="openDeviceAddModal")
